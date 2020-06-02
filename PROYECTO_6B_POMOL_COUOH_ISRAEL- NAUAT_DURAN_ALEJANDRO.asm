@@ -223,3 +223,196 @@ OPERACION_DIV MACRO var1, var2        ;MACRO DE PROCEDIMIENTO DE DIVISION
         JE CERRAR                 ;SALTAMOS A ETIQUETA               
     
     
+;*******************SUMA*******************
+
+    SUMAR: 
+         CALL LIMPIAR  
+         
+        MOV AH,9
+        LEA DX,ms1
+        INT 21H
+        MOV AH,1
+        INT 21H
+        SUB AL,30H
+        MOV m,AL
+        INT 21H
+        SUB AL,30H
+        MOV AH,m
+        AAD
+        MOV m,AL
+        MOV AH,9
+        LEA DX,ms1
+        INT 21H
+        MOV AH,1
+        INT 21H
+        SUB AL,30H
+        MOV n,AL
+        INT 21H
+        SUB AL,30H
+        MOV AH,n
+        AAD
+        MOV n,AL    
+        
+        MOV AH,9
+        LEA DX,ms2
+        INT 21H  
+        
+        OPERACION_SUMA m, n    
+        
+        MOV AH, 9               
+        LEA DX, LISTO       ;IMPRECION DE VARIABLE       
+        INT 21H
+        
+        JMP REINICIO   ;LLAMADA DE PROCEDIMIENTO EN UN SALTO  
+
+;*******************RESTA*******************
+         
+     RESTA: 
+         CALL LIMPIAR  
+         
+        MOV AH,9
+        LEA DX,ms1
+        INT 21H
+        MOV AH,1
+        INT 21H
+        SUB AL,30H
+        MOV m,AL
+        INT 21H
+        SUB AL,30H
+        MOV AH,m
+        AAD
+        MOV m,AL
+        MOV AH,9
+        LEA DX,ms1
+        INT 21H
+        MOV AH,1
+        INT 21H
+        SUB AL,30H
+        MOV n,AL
+        INT 21H
+        SUB AL,30H
+        MOV AH,n
+        AAD
+        MOV n,AL    
+        
+        MOV AH,9
+        LEA DX,ms3
+        INT 21H  
+        
+        OPERACION_RESTA m, n    
+        
+        MOV AH, 9               
+        LEA DX, LISTO       ;IMPRECION DE VARIABLE       
+        INT 21H
+        
+        JMP REINICIO   ;LLAMADA DE PROCEDIMIENTO EN UN SALTO  
+
+;*******************MULTIPLICACION*******************   
+    
+    MULTIPLICACION:  
+    
+        CALL LIMPIAR
+       ;*******PRIMERA CIFRA**** 
+        MOV AH,9       ;IMPRESION DE MENSAJE
+        LEA DX,ms1
+        INT 21H   
+        
+        MOV AH,01h     ;LECTURA DE DECENA
+        INT 21h        
+        SUB AL,30h     
+        MOV chr1,AL    
+        MOV AH,01h     ;LECTURA DE UNIDAD
+        INT 21h        
+        SUB AL,30h     
+        MOV chr2,AL    
+       ;********SEGUNDA CIFRA***************
+        MOV AH,9      
+        LEA DX,ms1
+        INT 21H 
+        
+        MOV AH,01h     
+        INT 21h        
+        SUB AL,30h     
+        MOV chr3,AL    
+        MOV AH,01h     
+        INT 21h        
+        SUB AL,30h     
+        MOV chr4,AL    
+        
+        MOV AH,9
+        LEA DX,ms4     ;IMPRESION DE MENSAJE
+        INT 21H  
+        
+        OPERACION_MUL chr1, chr2, char3, chr4    
+        
+        MOV AH, 9               
+        LEA DX, LISTO       ;IMPRECION DE VARIABLE       
+        INT 21H
+        
+        JMP REINICIO   ;LLAMADA DE PROCEDIMIENTO EN UN SALTO  
+        
+;*******************DIVISION*******************   
+    
+    DIVISION:  
+    
+        CALL LIMPIAR
+        
+        MOV AH,9      ;IMPRESION DE MENSAJE
+        LEA DX,ms1
+        INT 21H                             
+        
+        mov ah,09h      ;LECTURA DEL PRIMER NUMERO
+        mov ah,01h
+        int 21h
+        sub al,30h 
+        mov var1,al   
+        
+        mov ah,09h      ;IMPRESION DE MENSAJE
+        lea dx, ms1 
+        int 21h                 
+        
+        mov ah,01h          ;LECTURA DE SEGUNDO NUMERO
+        int 21h
+        sub al,30h 
+        mov var2,al 
+        mov bl,var2 
+        
+        MOV AH,9         ;IMPRESION DE MENSAJE
+        LEA DX,ms5
+        INT 21H  
+        
+        OPERACION_DIV var1, var2    
+        
+        MOV AH, 9               
+        LEA DX, LISTO       ;IMPRECION DE VARIABLE       
+        INT 21H
+        
+        JMP REINICIO   ;LLAMADA DE PROCEDIMIENTO EN UN SALTO          
+        
+;*******************CERRAR*******************         
+         
+     CERRAR:                        ;ETIQUETA PARA FINALIZAR PROGRAMA
+            MOV AX, 4c00h
+            INT 21h 
+            ENDS      
+.EXIT
+
+;***** PROCEDIMIENTO PARA LIMPIAR PANTALLA   ******
+LIMPIAR PROC NEAR
+    MOV AH,00h
+    MOV AL, 03h
+    INT 10h
+    RET
+LIMPIAR ENDP 
+;******PROCEDIMIETO DE REINICIO AL MENU PRINCIPAL ******
+REINICIO PROC NEAR
+        MOV AH,1
+        INT 21h 
+        
+        CMP AL,0Dh
+        CALL LIMPIAR 
+        JMP COMIENZO
+        RET
+REINICIO ENDP  
+
+END;FIN DEL .CODE
